@@ -2,3 +2,4 @@ sec_api==1.0.18
 sec-edgar-downloader==3.0.0
 beautifulsoup4==4.12.3
 langchain-core==0.1.33
+python-dotenv==1.0.1

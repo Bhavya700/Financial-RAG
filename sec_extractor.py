@@ -2,6 +2,9 @@ import os
 import json
 import logging
 from typing import List, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # LangChain Document
 try:
@@ -71,7 +74,9 @@ def _fetch_with_edgar_downloader(
     from sec_edgar_downloader import Downloader
     
     # Needs valid company and email to comply with SEC rules
-    dl = Downloader("FinancialRAG_LangGraph", "finrag@example.com", os.path.dirname(__file__))
+    company = os.getenv("SEC_DOWNLOADER_COMPANY", "DefaultCompany_LangGraph")
+    email = os.getenv("SEC_DOWNLOADER_EMAIL", "default@example.com")
+    dl = Downloader(company, email, os.path.dirname(__file__))
     documents = []
     
     for ticker in tickers:
