@@ -78,8 +78,8 @@ def ingest_documents():
     if not os.getenv("GOOGLE_API_KEY"):
         logger.error("GOOGLE_API_KEY not found in environment. Cannot create embeddings.")
         return
-        
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    # Note: text-embedding-004 requires models/ prefix
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
     
     vectorstore = Chroma.from_documents(
         documents=chunks,
@@ -93,7 +93,7 @@ def ingest_documents():
 
 def get_retriever():
     """Utility function for graph_rag.py to fetch the retriever"""
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
     vectorstore = Chroma(persist_directory=CHROMA_DB_DIR, embedding_function=embeddings)
     # Return a retriever that fetches top 4 chunks
     return vectorstore.as_retriever(search_kwargs={"k": 4})
