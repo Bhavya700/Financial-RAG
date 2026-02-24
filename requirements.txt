@@ -1,5 +1,10 @@
 sec_api==1.0.18
-sec-edgar-downloader==3.0.0
+sec-edgar-downloader==5.1.0
 beautifulsoup4==4.12.3
 langchain-core==0.1.33
 python-dotenv==1.0.1
+chromadb==0.4.24
+langchain-openai==0.1.1
+langchain-chroma==0.1.0
+langgraph==0.0.30
+pydantic==2.6.4
