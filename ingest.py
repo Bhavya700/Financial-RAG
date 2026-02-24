@@ -78,14 +78,23 @@ def ingest_documents():
     if not os.getenv("GOOGLE_API_KEY"):
         logger.error("GOOGLE_API_KEY not found in environment. Cannot create embeddings.")
         return
-    # Note: text-embedding-004 requires models/ prefix
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/gemini-embedding-001",
+        google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
     
-    vectorstore = Chroma.from_documents(
-        documents=chunks,
-        embedding=embeddings,
+    # Initialize empty vectorstore
+    vectorstore = Chroma(
+        embedding_function=embeddings,
         persist_directory=CHROMA_DB_DIR
     )
+    
+    # Gemini API has a strict batch limit (fails above 50 chunks per request)
+    batch_size = 50
+    for i in range(0, len(chunks), batch_size):
+        batch = chunks[i: i + batch_size]
+        logger.info(f"Adding batch {i//batch_size + 1}/{(len(chunks)-1)//batch_size + 1} ({len(batch)} chunks)")
+        vectorstore.add_documents(batch)
     
     # Force persistence to disk
     vectorstore.persist()
@@ -93,7 +102,10 @@ def ingest_documents():
 
 def get_retriever():
     """Utility function for graph_rag.py to fetch the retriever"""
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="gemini-embedding-001",
+        google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
     vectorstore = Chroma(persist_directory=CHROMA_DB_DIR, embedding_function=embeddings)
     # Return a retriever that fetches top 4 chunks
     return vectorstore.as_retriever(search_kwargs={"k": 4})

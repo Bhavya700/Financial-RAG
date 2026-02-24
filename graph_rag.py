@@ -6,7 +6,7 @@ from typing import List, Dict, Any, TypedDict
 from langchain_core.documents import Document
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from langgraph.graph import START, END, StateGraph
 from ingest import get_retriever

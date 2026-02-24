@@ -14,7 +14,7 @@ def run_tests():
     # Test 1: Apple 10-K from 2023
     print("[Test 1] Fetching AAPL 10-K for 2023")
     docs_aapl = fetch_sec_documents(
-        tickers=["AAPL"],
+        tickers=["GOOG"],
         form_types=["10-K"],
         years=["2023"]
     )
@@ -31,7 +31,7 @@ def run_tests():
     # Test 2: Microsoft 10-Q from 2023 Q1
     print("\n[Test 2] Fetching MSFT 10-Q for 2023 (Quarter: Q1)")
     docs_msft = fetch_sec_documents(
-        tickers=["MSFT"],
+        tickers=["NVDA"],
         form_types=["10-Q"],
         years=["2023"],
         quarters=["Q1"]
