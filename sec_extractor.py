@@ -89,7 +89,7 @@ def _fetch_with_edgar_downloader(
                 logger.info(f"Downloading {form_type} for {ticker} ({year}) using sec-edgar-downloader...")
                 
                 try:
-                    dl.get(form_type, ticker, after=dl_after, before=dl_before, amount=amount)
+                    dl.get(form_type, ticker, after=dl_after, before=dl_before, limit=amount)
                 except Exception as e:
                     logger.error(f"Error downloading {ticker} {form_type}: {e}")
                     continue
