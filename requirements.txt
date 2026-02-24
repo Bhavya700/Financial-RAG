@@ -7,4 +7,6 @@ chromadb
 langchain-google-genai
 langchain-chroma
 langgraph
+langchain-community
 pydantic==2.6.4
+streamlit
