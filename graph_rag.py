@@ -4,7 +4,7 @@ import logging
 from typing import List, Dict, Any, TypedDict
 
 from langchain_core.documents import Document
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -62,7 +62,7 @@ def grade_documents_node(state: GraphState):
     loop_count = state["loop_count"]
     
     # Setup LLM with structured output
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     structured_llm_grader = llm.with_structured_output(GradeDocuments)
     
     system_prompt = """You are a grader assessing the relevance of a retrieved document to a user question. \n 
@@ -97,7 +97,7 @@ def rewrite_query_node(state: GraphState):
     documents = state["documents"]
     loop_count = state["loop_count"]
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     
     system_prompt = """You are an AI generating an improved question optimized for database retrieval. \n
     Look at the input question and try to reason about the underlying semantic intent / keywords."""
@@ -122,7 +122,7 @@ def explain_jargon_node(state: GraphState):
     logger.info("---EXPLAIN JARGON FOR BEGINNERS---")
     documents = state["documents"]
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.1)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.1)
     
     # Provide the page content to the LLM
     docs_text = "\n\n".join([d.page_content for d in documents])
@@ -167,7 +167,7 @@ def generate_answer_node(state: GraphState):
         logger.warning("Max retrieval loops reached without finding relevant documents.")
         return {"generation": "I'm sorry, I couldn't find enough relevant information in the SEC filings to answer your question accurately."}
         
-    llm = ChatOpenAI(model="gpt-4o", temperature=0.2)
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2)
     
     docs_text = "\n\n---\n\n".join([d.page_content for d in documents])
     # Format jargon for the prompt
@@ -285,4 +285,4 @@ if __name__ == "__main__":
         
     except Exception as e:
         logger.error(f"Graph execution failed: {e}")
-        logger.warning("Please ensure OPENAI_API_KEY is set in .env and you have ingested documents into ChromaDB first.")
+        logger.warning("Please ensure GOOGLE_API_KEY is set in .env and you have ingested documents into ChromaDB first.")

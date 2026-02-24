@@ -2,7 +2,7 @@ import os
 import glob
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from dotenv import load_dotenv
 import logging
@@ -74,12 +74,12 @@ def ingest_documents():
 
     logger.info("Initializing OpenAI Embeddings and persisting to ChromaDB...")
     
-    # Ensure OPENAI_API_KEY is set in .env
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("OPENAI_API_KEY not found in environment. Cannot create embeddings.")
+    # Ensure GOOGLE_API_KEY is set in .env
+    if not os.getenv("GOOGLE_API_KEY"):
+        logger.error("GOOGLE_API_KEY not found in environment. Cannot create embeddings.")
         return
         
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     
     vectorstore = Chroma.from_documents(
         documents=chunks,
@@ -93,7 +93,7 @@ def ingest_documents():
 
 def get_retriever():
     """Utility function for graph_rag.py to fetch the retriever"""
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vectorstore = Chroma(persist_directory=CHROMA_DB_DIR, embedding_function=embeddings)
     # Return a retriever that fetches top 4 chunks
     return vectorstore.as_retriever(search_kwargs={"k": 4})
